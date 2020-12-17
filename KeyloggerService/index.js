@@ -31,38 +31,46 @@ mongoose.connect(mongo_uri, {
   useUnifiedTopology: true,
 });
 
-/*  
-Datamodel Register: {
-    username : encoded json
-    password : encoded json
-    emailaddr : encoded json
-    ....
-}
-Datamodel Login: {
-    username : encoded json
-    password : encoded json
-}
-*/
+// Datamodel
+const UserActivity = mongoose.model('UserActivity', new Schema({
+  userId: string,
+  activityPercentage: string,
+  classTags: [string],
+  tags: [string]
+}))
 
-app.get('/data',(req,res)=> {
+// get Data by querry
+app.get('/userActivity',(req,res)=> {
     // forward req , return res
-    // maybe queries
-
+    // queried by userid
+    const { userId, classTags, tags } = req.body();
+    db.on('error', console.error.bind(console, 'connection error:')); 
+    UserActivity.find({ 
+      'userId'  : userId,
+       classTags: {$in : classTags},
+       tags     : {$in : tags}
+    })
+    .then((userActivities) => res.status(200).send(userActivities))
+    .catch((err) => res.status(400).send(err));
 }); 
 
-app.post('/register',(req,res)=> {
-    // forward req , return res
-
-});
-
-app.post('/login',(req,res)=> {
-    // forward req , return res
-
-});
-
-app.post('/data',(req,res)=> {
-    // forward req , return res
-
+// post a UserActivity
+app.post('/userActivity',(req,res)=> {
+    const {userId, activityPercentage, classTags, tags} = req.body
+    db.on('error', console.error.bind(console, 'connection error:'));
+    const userActivity = new UserActivity({
+      userId: userId,
+      activityPercentage: activityPercentage,
+      classTags : classTags,
+      tags : tags
+    });
+    userActivity.save(function(err, userA) {
+      if(err) {
+          console.log(err);
+          return res.status(500).send(); 
+      }     
+    });
+    res.send({});
 });
 
 app.listen(apiPort, () => {

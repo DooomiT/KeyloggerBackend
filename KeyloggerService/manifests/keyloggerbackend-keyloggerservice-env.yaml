@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: keylogger-service-env
+  name: keylogger-service-env
+data:
+  KEYLOGGER_SERVICE_PORT: "4000"

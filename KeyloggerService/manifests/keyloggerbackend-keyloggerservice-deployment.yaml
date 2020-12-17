@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: keylogger-service
+  name: keylogger-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: keylogger-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keylogger-service
+    spec:
+      containers:
+      - env:
+        - name: KEYLOGGER_SERVICE_PORT  # dynamic Eventbus endpoint via environment
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_SERVICE_PORT
+              name: keylogger-service-env
+        - name: KEYLOGGER_DATABASE_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_DATABASE_HOSTNAME
+              name: keyloggerbackend-mongodb-env
+        - name: KEYLOGGER_DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_DATABASE_NAME
+              name: keyloggerbackend-mongodb-env
+        - name: KEYLOGGER_DATABASE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_DATABASE_PASSWORD
+              name: keyloggerbackend-mongodb-env
+        - name: KEYLOGGER_DATABASE_USER
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_DATABASE_USER
+              name: keyloggerbackend-mongodb-env
+        - name: KEYLOGGER_DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: KEYLOGGER_DATABASE_PORT
+              name: keyloggerbackend-mongodb-env
+        image: flo101/keylogger-service
+        imagePullPolicy: ""
+        name: keylogger-service
+        ports:
+        - containerPort: 4000
+        resources:   # Aufgabe j -> specify limits
+          limits:
+            memory: "128Mi"
+            cpu: "0.1"
+        livenessProbe:  # Aufgabe i -> restart if get /values is not available
+          httpGet:
+            path: /values
+            port: 4000
+          initialDelaySeconds: 20
+          periodSeconds: 10
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

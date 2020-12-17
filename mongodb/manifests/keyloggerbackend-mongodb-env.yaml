@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: keyloggerbackend-mongodb-env
+  name: keyloggerbackend-mongodb-env
+data:
+  KEYLOGGER_DATABASE_HOSTNAME: keyloggerbackend-mongodb
+  MONGODB_INITIAL_PRIMARY_HOST: keyloggerbackend-mongodb
+  KEYLOGGER_DATABASE_NAME: keyloggerdb
+  KEYLOGGER_DATABASE_PORT: "27017"
+  MONGODB_ROOT_USERNAME: root # replace by secrets
+  MONGODB_ROOT_PASSWORD: root # replace by secrets
+  KEYLOGGER_DATABASE_USER: a # replace by secrets
+  KEYLOGGER_DATABASE_PASSWORD: b # replace by secrets

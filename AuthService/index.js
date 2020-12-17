@@ -31,6 +31,7 @@ mongoose.connect(mongo_uri, {
   useUnifiedTopology: true,
 });
 
+// https://jasonwatmore.com/post/2018/06/14/nodejs-mongodb-simple-api-for-authentication-registration-and-user-management
 /*  
 Datamodel Register: {
     username : encoded json
