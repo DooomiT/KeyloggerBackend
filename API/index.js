@@ -13,23 +13,28 @@ const apiPort = process.env(API_PORT)
 app.get('/data',(req,res)=> {
     // forward req , return res
     // maybe queries
-
+    const data = req.body;
+    axios.get(keyloggerService + '/data', data)
 }); 
+
+app.post('/data',(req,res)=> {
+    // forward req , return res
+    const data = req.body;
+    axios.post(keyloggerService + '/data', data)
+});
 
 app.post('/register',(req,res)=> {
     // forward req , return res
-
+    const data = req.body;
+    axios.post(authService + '/register', data)
 });
 
 app.post('/login',(req,res)=> {
     // forward req , return res
-
+    const data = req.body;
+    axios.post(authService + '/login', data)
 });
 
-app.post('/data',(req,res)=> {
-    // forward req , return res
-
-});
   
 app.listen(apiPort, () => {
     console.log('Listening on', apiPort);
