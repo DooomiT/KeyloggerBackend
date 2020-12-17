@@ -1,0 +1,73 @@
+@startuml KeyloggerConcept
+rectangle "Frontend Data" as FE_D {
+    artifact "Userinterface Data" as FE_UID {
+        
+    }
+    artifact "Evaluated Keylogger Data" as FE_EKD {
+
+    }
+}
+
+rectangle "Backend Data" as BE_D {
+    artifact "Keylogger Data" as BE_KLD {
+
+    }
+    artifact "User Data" as BE_USD {
+
+    }
+}
+
+cloud "Frontend" as FE {
+    node "UserInterface" as UI {
+        node "StudentUI" as StudentUI
+        node "DocentUI" as DocentUI
+    }
+    StudentUI ..> FE_EKD
+    StudentUI ..> FE_UID
+    DocentUI ..> FE_EKD
+}
+
+cloud "Backend" as BE {
+    node API [
+        <b>API
+        ====
+        Routes:
+        ----
+        /register (POST) Forward
+        ....
+        /login (POST) Forward
+        ....
+        /data (POST/GET) Forward
+    ]
+    node AuthService [
+        <b>AuthService
+        ====
+        Routes:
+        ----
+        /register (POST)
+        ....
+        /login (POST)
+    ]
+    node KeyloggerService [
+        <b>KeyloggerService
+        ====
+        Routes:
+        ----
+        /data (POST/GET)
+        get neccessary UIdata
+        post Evaluated Keyloggerdata
+    ]
+    node "MongoDB" {
+        database "AuthorisationDB" as AuthorisationDB
+        database "KeyloggerDB" as KeyloggerDB
+    }
+    AuthorisationDB ..> BE_USD
+    KeyloggerDB ..> BE_KLD
+    API -- AuthService
+    API -- KeyloggerService
+    AuthService -- AuthorisationDB
+    KeyloggerService -- KeyloggerDB
+}
+
+UI -0- API
+@enduml
